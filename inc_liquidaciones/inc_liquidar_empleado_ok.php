@@ -15,12 +15,14 @@
 	$fechaFin=mysql_fetch_array($getfecha)['hasta'];
 	$separafecha= explode('-', $fecha);
 	$dia = $separafecha[2];
-	$mes = $separafecha[1];
+	$mess = $separafecha[1];
 	$anio = $separafecha[0];
 	$mesc =date("m");
 	$anioc =date("Y");
 
-	$fechaliquidacion=$anioc."-".$mes;
+	$fechaliquidacion=$anioc."-".$mess;
+
+	
 
 
 
@@ -93,13 +95,35 @@ $hijosdis=0;
 //CONSULTO PARA SACAR EL PRESENTISMO DEL EMPLEADO
 
 
-$q_presentismo= mysql_query("SELECT * FROM asistencia 
+/**$q_presentismo= mysql_query("SELECT * FROM asistencia 
 					
-					WHERE empleado_idempleado=$row_empleados[idempleado]");
-					//AND fechalogin >= $fecha AND fechalogin<$fechaFin");
+					WHERE empleado_idempleado=$idempleado[$i]
+					AND fechalogin like '%$fechaliquidacion%'");
 
 
-$cant_q_presentismo=mysql_num_rows($q_presentismo);
+$cant_q_presentismo=mysql_num_rows($q_presentismo);**/
+
+//------------------------NUEVO PRESENTISMO----------------------
+				$q_novedades= mysql_query("SELECT * FROM novedad
+				WHERE empleado_idempleado=$row_empleados[idempleado]
+				&& fechaNovedad like '%fechaliquidacion%'");
+				//$cantFaltas=0;
+				//$cantLlegadasTarde=0;
+				$cantFaltas='FALSE';
+				$cantLlegadasTarde='FALSE';
+				$cant_novedades= mysql_num_rows($q_novedades);
+				while($row=mysql_fetch_assoc($q_novedades)){
+						//$cantFaltas= $cantFaltas+$row['falta'];
+						//$cantLlegadasTarde= $cantLlegadasTarde+$row['llegadaTarde'];
+						if ($row['falta']!=0){
+							$cantFaltas=='TRUE';
+						}
+						if($row['llegadaTarde']!=0) {
+							$cantLlegadasTarde=='TRUE';
+						}
+					
+					}
+
 
 /**$desde1=mysql_query("SELECT getdate() as fechalogin, cast(getdate() as date) as flogin_sin_tiempo 
 			from asistencia 
@@ -129,6 +153,7 @@ $q_tipoliquidacion_concepto=mysql_query("SELECT * FROM tipoliquidacion_concepto
 					//$montovariable=0;
 					$montovariable= $row_tipoliquidacion_concepto['montovariable'];
 					$subtotal=0;
+					$subAntiguedad=0;
 					$var="Antiguedad";
 			
 					if($nombreconcepto=="Antiguedad"){
@@ -136,14 +161,14 @@ $q_tipoliquidacion_concepto=mysql_query("SELECT * FROM tipoliquidacion_concepto
 						$suma=$suma+($antiguedad*($basicoempleado));
 						$sumaHaberAporte= $sumaHaberAporte+($antiguedad*($basicoempleado));
 						$subtotal=$antiguedad*$basicoempleado;
+						//$subAntiguedad= $antiguedad*$basicoempleado;
 					}
 
-					if($nombreconcepto=="Presentismo"){
-						if($mes==1 && $cant_q_presentismo==2){
-
-						$suma=$suma+$montofijo;
-						$sumaHaberAporte=$sumaHaberAporte+$montofijo;
-						$subtotal=$montofijo;}
+					if($nombreconcepto=="Presentismo" && ($cant_novedades==0)){
+						$subAntiguedad= $antiguedad*$basicoempleado;
+						$suma=$suma+($montovariable/100)*($basicoempleado+$subAntiguedad);
+						$sumaHaberAporte=$sumaHaberAporte+($montovariable/100)*($basicoempleado+$subAntiguedad);
+						$subtotal= ($montovariable/100)*($basicoempleado+$subAntiguedad);
 					}
 					
 					if($tipoconcepto==0 && (!($nombreconcepto=="Antiguedad")) && (!($nombreconcepto=="Presentismo"))){

@@ -10,7 +10,7 @@ function Header()
 {
     // Logo
     $this->SetTitle('LIBRO SUELDO');
-    $this->Image('../images/logo.png',10,5,25);
+    $this->Image('../images/logo1.jpg',10,5,25);
     $this->SetFont('Arial','B',13);
     // Move to the right
     $this->Cell(80);
@@ -35,8 +35,8 @@ function Footer()
 }
 }
 
-$db = new dbObj();
-$connString =  $db->getConnstring();
+//$db = new dbObj();
+//$connString =  $db->getConnstring();
 
 // $q_compra=mysql_query("SELECT * FROM compra");
 mysql_select_db($database_conexion_compucentro,$conexion_compucentro);
@@ -44,41 +44,115 @@ if (isset($_POST['fechadesde']) && $_POST['fechadesde']!=''&& isset($_POST['fech
   	$fecha_desde = $_POST['fechadesde'];
     $fecha_hasta = $_POST['fechahasta'];
 
-  $result = mysqli_query($connString, "SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
-  FROM detalleliquidacion t1
- INNER JOIN empleado t2 on empleado_idempleado=idempleado
- INNER JOIN liquidacion t3 on liquidacion_idliquidacion=idliquidacion
-      where t3.fechaliquidacion >= '$fecha_desde' && t3.fechaliquidacion <= '$fecha_hasta'") or die("database error:". mysqli_error($connString));
+  $result = mysql_query("SELECT apellidoempleado,cuilempleado,nombreempleado,categoriaempleado_idcategoriaempleado,
+                          fechaliquidacion,totalhaber,totaldebe,pagototal,iddetalleliquidacion,
+                          descripcionliq,desde,hasta
+  FROM detalleliquidacion 
+  INNER JOIN empleado on empleado_idempleado=idempleado
+  INNER JOIN liquidacion on liquidacion_idliquidacion=idliquidacion
+  WHERE desde >= '$fecha_desde' && hasta <= '$fecha_hasta'");
 
-}else {
+}
+/**else {
   if (isset($_POST['fechadesde']) && $_POST['fechadesde']!='') {
     $fecha_desde = $_POST['fechadesde'];
-    $result = mysqli_query($connString, "SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
+    $result = mysqli_query("SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
     FROM detalleliquidacion t1
    INNER JOIN empleado t2 on empleado_idempleado=idempleado
    INNER JOIN liquidacion t3 on liquidacion_idliquidacion=idliquidacion
-        where t3.fechaliquidacion >= '$fecha_desde'") or die("database error:". mysqli_error($connString));
+        where t3.fechaliquidacion >= '$fecha_desde'");
   } else {
       if (isset($_POST['fechahasta']) && $_POST['fechahasta']!='') {
         $fecha_hasta = $_POST['fechahasta'];
-        $result = mysqli_query($connString, "SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
+        $result = mysqli_query("SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
         FROM detalleliquidacion t1
        INNER JOIN empleado t2 on empleado_idempleado=idempleado
        INNER JOIN liquidacion t3 on liquidacion_idliquidacion=idliquidacion
-            where t3.fechaliquidacion <= '$fecha_hasta'") or die("database error:". mysqli_error($connString));
+            where t3.fechaliquidacion <= '$fecha_hasta'");
       } else{
-        $result = mysqli_query($connString, "SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
+        $result = mysqli_query("SELECT t2.apellidoempleado,t2.nombreempleado,t2.categoriaempleado_idcategoriaempleado,t3.fechaliquidacion,t1.totalhaber,t1.totaldebe,pagototal, t1.iddetalleliquidacion, t3.descripcionliq
             FROM detalleliquidacion t1
            INNER JOIN empleado t2 on empleado_idempleado=idempleado
            INNER JOIN liquidacion t3 on liquidacion_idliquidacion=idliquidacion
            order by t1.iddetalleliquidacion Desc
-           ") or die("database error:". mysqli_error($connString));
+           ");
 
       }
   }
-}
+}**/
+ 
 
 $pdf = new PDF();
+//header
+$pdf->AddPage('L','A4',-90);
+//foter page
+//$pdf->AliasNbPages();
+$pdf->SetTextColor(0, 0, 0);
+$pdf->SetFont('Times','B',9);
+$pdf->Cell(50,8,"Fecha de Liquidacion",1,0,'C');
+$pdf->Cell(50,8,"Nombre-Apellido Empleado",1,0,'C');
+$pdf->Cell(50,8,"Descripcion Liquidacion",1,0,'C');
+$pdf->Cell(32,8,"Cuil Empleado",1,0,'C');
+$pdf->Cell(32,8,"Total Haber",1,0,'C');
+$pdf->Cell(32,8,"Total Debe",1,0,'C');
+$pdf->Cell(32,8,"Pago Total",1,0,'C');
+//$pdf->Cell(32,8,"Total Impor.\t Fact.",1,0,'C');
+//$pdf->Cell(32,8,"IVA Credito\t Fiscal",1,0,'C');
+/**foreach($result as $row) {
+  $pdf->SetTextColor(100);
+  $pdf->SetFont('Arial','',9);
+  $pdf->Ln();
+  $pdf->Cell(32,8,$row['fechaventa'],1,0,'C');
+  $pdf->Cell(32,8,$row['nombreorsocial'],1,0,'C');
+foreach($row as $column)
+//$pdf->Cell(32,8,$column,1,0,'C');
+$pdf->Cell(32,8,$column['fechaventa'],1,0,'C');
+}**/
+$totalsueldo=0;
+//$totalventas=0;
+while($row=mysql_fetch_assoc($result))
+
+  { $pdf->SetTextColor(100);
+    $pdf->SetFont('Times','',9);
+    $pdf->Ln();
+    //$ivaventa1=0;
+    //$importeSinIva=0;
+    //$total = $total + $row['ivaventa'];
+    //echo $row['ivaventa'];
+    //$importeSinIva= $row['totalventa']/1.21;
+    //$ivaventa1=$row['totalventa']-$importeSinIva;
+    //$totaliva1= $totaliva1+$ivaventa1;
+    $totalpagototal=$totalpagototal+$row['pagototal'];
+   $pdf->Cell(50,8,$row['desde']. ' - ' .$row['hasta'],1,0,'C');
+   $pdf->Cell(50,8,($row['apellidoempleado']).'-'.($row['nombreempleado']),1,0,'C');
+   $pdf->Cell(50,8,$row['descripcionliq'],1,0,'C');
+   $pdf->Cell(32,8,$row['cuilempleado'],1,0,'C');
+   $pdf->Cell(32,8,$row['totalhaber'],1,0,'C');
+   $pdf->Cell(32,8,$row['totaldebe'],1,0,'C');
+   $pdf->Cell(32,8,$row['pagototal'],1,0,'C');
+   //$pdf->Cell(32,8,$row['totalventa'],1,0,'C');
+   //$pdf->Cell(32,8,round($ivaventa1,2),1,0,'C');
+  }
+$pdf->Ln();
+
+//$pdf->SetX(120);
+$pdf->SetTextColor(0, 0, 0);
+$pdf->SetFont('Arial','B',9);
+$pdf->Cell(50,8,NULL,0,0,'C');
+$pdf->Cell(50,8,NULL,0,0,'C');
+$pdf->Cell(50,8,NULL,0,0,'C');
+$pdf->Cell(32,8,NULL,0,0,'C');
+$pdf->Cell(32,8,NULL,0,0,'C');
+//$pdf->Cell(32,8,NULL,0,0,'C');
+$pdf->Cell(32,8,'ACUMULADOS',1,0,'C');
+$pdf->Cell(32,8,round($totalpagototal,2),1,0,'C');
+//$pdf->Cell(32,8,round($totaliva1, 2),1,0,'C');
+$pdf->SetTextColor(100);
+
+$pdf->Output('','IVA_SUELDO.pdf');
+
+//----------------------------COMENTARIO-------------------------
+/**$pdf = new PDF();
 //header
 $pdf->AddPage('L','A4',-90);
 //foter page
@@ -121,7 +195,7 @@ while($row=mysqli_fetch_assoc($result))
     $categoriaempleado_idcategoriaempleado = $row['categoriaempleado_idcategoriaempleado'];
     $descipcionliquidacionSubstring =substr ( $descipcionliquidacion , 0,14  ).".";
 
-    $q_salariobasico = mysqli_query($connString, "SELECT salariobasicocategoria from categoriaempleado WHERE idcategoriaempleado=$categoriaempleado_idcategoriaempleado") or die("database error:". mysqli_error($connString));
+    $q_salariobasico = mysqli_query("SELECT salariobasicocategoria from categoriaempleado WHERE idcategoriaempleado=$categoriaempleado_idcategoriaempleado");
   	$salario=mysqli_fetch_array($q_salariobasico)['salariobasicocategoria'];
     $pagototal= 0;
     if ($row['pagototal']!=''|| $row['pagototal']!=null) {
@@ -141,9 +215,9 @@ while($row=mysqli_fetch_assoc($result))
     $asignacion_por_hijo= 0;
     $basico=0;
 
-    $concepto_result = mysqli_query($connString, "SELECT concepto_idconcepto, subtotal, descripcionconcepto from detalleconcepto
+    $concepto_result = mysqli_query("SELECT concepto_idconcepto, subtotal, descripcionconcepto from detalleconcepto
       INNER JOIN concepto on concepto_idconcepto=idconcepto WHERE
-      detalleliquidacion_iddetalleliquidacion = $iddetalleliquidacion ") or die("database error:". mysqli_error($connString));
+      detalleliquidacion_iddetalleliquidacion = $iddetalleliquidacion ");
       while($row_concepto=mysqli_fetch_assoc($concepto_result)){
           switch ($row_concepto['concepto_idconcepto']) {
 
@@ -208,5 +282,5 @@ $pdf->Cell(24,8,'Total',1,0,'C');
 $pdf->Cell(24,8,round($total, 2),1,0,'C');
 $pdf->SetTextColor(100);
 
-$pdf->Output('','LIBRO_SUELDO.pdf');
+$pdf->Output('','LIBRO_SUELDO.pdf');**/
 ?>

@@ -6,7 +6,7 @@
 	$idempleado=$_GET['idempleado'];
 
 	$compra="SELECT * FROM compra 
-	INNER JOIN empleado ON empleado_idempleado=idempleado
+	LEFT JOIN empleado ON empleado_idempleado=idempleado
 	INNER JOIN proveedor ON proveedor_idproveedor=idproveedor
 	WHERE idcompra=$idcompra";
 	$q_compra=mysql_query($compra);

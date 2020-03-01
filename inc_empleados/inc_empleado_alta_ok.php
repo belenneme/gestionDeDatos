@@ -34,8 +34,8 @@
 	$row_ult_empleado=mysql_fetch_array($q_ult_empleado);
 	$ult_empleado=$row_ult_empleado['idempleado'];
 
-	$alta_usuario=mysql_query("INSERT INTO usuario (nombreusuario, password, tipousuario, empleado_idempleado, nivel)
-	VALUES ('$nombreempleado', MD5('12345'), '2', '$ult_empleado', $nivel)");
+	$alta_usuario=mysql_query("INSERT INTO usuario (nombreusuario, password, empleado_idempleado, nivel)
+	VALUES ('$nombreempleado', MD5('12345'),'$ult_empleado', $nivel)");
 
 	$alta_cajadeahorro=mysql_query("INSERT INTO cajadeahorro (nrocuenta, banco_idbanco, empleado_idempleado)
 	VALUES ('$cajadeahorro', '$banco', '$ult_empleado')")

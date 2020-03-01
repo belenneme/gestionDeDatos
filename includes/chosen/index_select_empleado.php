@@ -15,3 +15,26 @@
   </select>
 
 
+  <script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'No encontrado'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+  </script>
+
+      <script type="text/javascript">
+    $('select#inputidempleado').on('change',function(){
+    var idproveedorjs = $(this).val();
+    $.post("includes/obtenerempleado.php", { idempleadojs: idempleadojs }, function(data){
+                $("#inputcuilempleado").val(data);
+            });
+    });
+    </script>
+
+

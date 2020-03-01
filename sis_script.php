@@ -21,7 +21,7 @@
             margin-top: 1em;
         }
         .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover { 
-            color: #FA8072;
+            color: #FFFFFF;
         }
     </style>
 

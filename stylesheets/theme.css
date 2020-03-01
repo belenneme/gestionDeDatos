@@ -1,6 +1,6 @@
 
 body {
-  background: #fd4d08; /*color del panel */
+  background: #4d5b76; /*color del panel */
   background-position: initial initial;
   background-repeat: initial initial;
   margin: 0px;
@@ -136,7 +136,7 @@ label {
 }
  /*color de usuario */
 .navbar .nav > li > a {
-  color: #717f7b;
+  color: #FFFFFF;
   text-shadow: none;
 }
 .navbar .nav > li:hover {
@@ -423,10 +423,10 @@ a.panel-heading:hover,
 /*cambia color menu*/
 .sidebar-nav .nav-header {
 
-  border-bottom: 1px solid #;
-  background: #29587A;
+  border-bottom: 1px solid;
+  background: #C9302C;
   border-left: none;
-  color: white;
+  color:white;
   display: block;
   font-weight: normal;
   font-size: 1em;
@@ -870,7 +870,7 @@ table.table.list tr:first-child td {
   max-width:1500px;
   min-height:90px;
   position:relative;
-  background:#f10808; /*cambiar fondo */
+  background:#4d5b76; /*cambiar fondo */
   box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
 }
 
