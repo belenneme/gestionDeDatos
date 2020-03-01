@@ -9,7 +9,10 @@
 	$getfecha=mysql_query("SELECT * from liquidacion where idliquidacion=$idliquidacion")
 						or die(mysql_error());
 
-	
+	$fechaDesde=mysql_query("SELECT desde from liquidacion where idliquidacion=$idliquidacion")
+	or die(mysql_error());
+	$fechaHasta=mysql_query("SELECT hasta from liquidacion where idliquidacion=$idliquidacion")
+	or die(mysql_error());
 
 	$fecha=mysql_fetch_array($getfecha)['desde'];
 	$fechaFin=mysql_fetch_array($getfecha)['hasta'];
@@ -103,26 +106,43 @@ $hijosdis=0;
 
 $cant_q_presentismo=mysql_num_rows($q_presentismo);**/
 
-//------------------------NUEVO PRESENTISMO----------------------
-				$q_novedades= mysql_query("SELECT * FROM novedad
-				WHERE empleado_idempleado=$row_empleados[idempleado]
-				&& fechaNovedad like '%fechaliquidacion%'");
-				//$cantFaltas=0;
-				//$cantLlegadasTarde=0;
-				$cantFaltas='FALSE';
-				$cantLlegadasTarde='FALSE';
-				$cant_novedades= mysql_num_rows($q_novedades);
-				while($row=mysql_fetch_assoc($q_novedades)){
-						//$cantFaltas= $cantFaltas+$row['falta'];
-						//$cantLlegadasTarde= $cantLlegadasTarde+$row['llegadaTarde'];
-						if ($row['falta']!=0){
-							$cantFaltas=='TRUE';
-						}
-						if($row['llegadaTarde']!=0) {
-							$cantLlegadasTarde=='TRUE';
-						}
-					
-					}
+//------------------------NUEVO PRESENTISMO opcion 2----------------------
+$cantFaltas=0;
+$cantLlegadasTarde=0;			
+$q_noved=mysql_query("SELECT fechaNovedad,falta,llegadaTarde FROM novedad
+WHERE empleado_idempleado=$row_empleados[idempleado]");
+//AND fechaNovedad BETWEEN ($fechaDesde AND $fechaHasta)");
+
+$b=0;
+$cant_novedades= mysql_num_rows($q_noved);
+while($row=mysql_fetch_assoc($q_noved)){
+	$cantFaltas= $cantFaltas+$row['falta'];
+	$cantLlegadasTarde= $cantLlegadasTarde+$row['llegadaTarde'];
+}
+
+
+/**$b=0;
+while($row=mysql_fetch_assoc($q_noved)){
+	//$cantFaltas= $cantFaltas+$row['falta'];
+	//$cantLlegadasTarde= $cantLlegadasTarde+$row['llegadaTarde'];
+	//if ($row['fechaNovedad'] >= $fecha && ($row['fechaNovedad']<= $fechaFin)){
+		
+	$fechaNovedad=mysql_fetch_array($getfecha)['fechaNovedad'];
+
+	$separafechaNovedad= explode('-', $fechaNovedad);
+	$diaN = $separafecha[2];
+	$messN = $separafecha[1];
+	$anioN = $separafecha[0];
+	$fechaNovedadd=$anioN."-".$messN;
+
+		if($fechaNovedadd==$fechaliquidacion) {
+			$cantLlegadasTarde==TRUE;
+			$cantFaltas==TRUE;
+			$b=1;
+		}
+	}
+}
+
 
 
 /**$desde1=mysql_query("SELECT getdate() as fechalogin, cast(getdate() as date) as flogin_sin_tiempo 
@@ -164,11 +184,20 @@ $q_tipoliquidacion_concepto=mysql_query("SELECT * FROM tipoliquidacion_concepto
 						//$subAntiguedad= $antiguedad*$basicoempleado;
 					}
 
-					if($nombreconcepto=="Presentismo" && ($cant_novedades==0)){
+					if($nombreconcepto=="Presentismo"&& $cantLlegadasTarde<2 && $cantFaltas==0)
+					{
 						$subAntiguedad= $antiguedad*$basicoempleado;
 						$suma=$suma+($montovariable/100)*($basicoempleado+$subAntiguedad);
 						$sumaHaberAporte=$sumaHaberAporte+($montovariable/100)*($basicoempleado+$subAntiguedad);
 						$subtotal= ($montovariable/100)*($basicoempleado+$subAntiguedad);
+						
+						
+					}
+					if($nombreconcepto=="Presentismo" && ($cantLlegadasTarde>=2 || $cantFaltas>0))
+					{
+						
+						$subtotal= 0;
+						
 					}
 					
 					if($tipoconcepto==0 && (!($nombreconcepto=="Antiguedad")) && (!($nombreconcepto=="Presentismo"))){

@@ -95,7 +95,7 @@ $nombrecategoria= mysql_query("SELECT nombrecategoria
 
     // Logo
     $this->SetTitle('BOLETA DE SUELDO');
-    //$this->Image('../images/logo.png',40,5,25);
+    $this->Image('../images/logo1.jpg',150,10,25);
     $this->SetFont('Times','B',13);
     // Move to the right
     $this->Cell(80);
