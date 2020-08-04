@@ -216,7 +216,8 @@ $pdf->Cell(31,8,"DESCUENTOS",1,0,'C');
 //while ($row = mysql_fetch_row($result)) {
  // $result1 = trim($row[0]);
 //}
-
+$totHaberCon=0;
+$totHaberSin=0;
 while ($row=mysql_fetch_assoc($result)){
   //foreach($result as $row) 
  $pdf->SetTextColor(100);
@@ -230,6 +231,13 @@ while ($row=mysql_fetch_assoc($result)){
             if(($row['tipoconcepto']==0) || ($row['tipoconcepto']==1)){
               $pdf->Cell(31,8,$row['subtotal'],1,0,'C');
               $pdf->Cell(31,8,NULL,1,0,'C');
+              if($row['tipoconcepto']==0) {
+                $totHaberCon=$totHaberCon+$row['subtotal'];
+              }
+              if($row['tipoconcepto']==1) {
+                $totHaberSin=$totHaberSin+$row['subtotal'];
+              }
+
             }
             else if ($row['tipoconcepto']==2){
 
@@ -254,7 +262,13 @@ $pdf->Ln();
 //$pdf->Cell(50,8,NULL,0,0,'C');
 $pdf->Cell(100,8,'SON PESOS:',1,0,'L');
 $pdf->Cell(62,8,$pagototal1,1,0,'C');
-
+//$pdf->SetX(72);
+$pdf->Ln();
+$pdf->Cell(100,8,'Total Haber con Aporte:',1,0,'L');
+$pdf->Cell(62,8,$totHaberCon,1,0,'C');
+$pdf->Ln();
+$pdf->Cell(100,8,'Total Haber sin Aporte:',1,0,'L');
+$pdf->Cell(62,8,$totHaberSin,1,0,'C');
 $pdf->SetTextColor(100);
 $pdf->Output('','Boleta.pdf');
 ?>

@@ -39,6 +39,7 @@
     <li><a href="empleados.php"><span class="fa fa-caret-right"></span> Listar empleados</a></li>
     <li><a href="categoriaempleado.php"><span class="fa fa-caret-right"></span> Categorias</a></li>
     <li><a href="novedadempleado.php"><span class="fa fa-caret-right"></span> Novedad-Asistencia</a></li>
+    
   </ul>
 </li>
 <?php }?>
@@ -67,5 +68,7 @@
 <?php }?>
 <li><a href="clientes.php" class="nav-header"><i class="fa fa-male"></i> Clientes</a></li>
 <li><a href="pago.php" class="nav-header"><i class="fa fa-money"></i> Cuenta Clientes</a></li>
+
+  <li><a href="moduloseguridad.php" class="nav-header"><i class="fa fa-truck"></i> Modulo Seguridad</a></li>
 
  </div>
