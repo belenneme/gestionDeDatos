@@ -12,7 +12,11 @@ mysql_select_db($database_conexion_compucentro,$conexion_compucentro);
 $idprovincia = $_POST['idprovinciajs'];
 $localidad="SELECT * FROM localidad WHERE provincia_idprovincia=$idprovincia";
 $q_localidad=mysql_query($localidad);
-
+?>
+<select name="inputLocalidad" id="inputLocalidad" class="form-control" required="required">
+    <option value="0">Localidad</option>
+</select>
+<?php
 while ($row_localidad=mysql_fetch_array($q_localidad)) { 
                
         $html.= '<option value="'.$row_localidad['idlocalidad'].'">'.$row_localidad['nombrelocalidad'].'</option>';

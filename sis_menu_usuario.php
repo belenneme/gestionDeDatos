@@ -25,9 +25,9 @@
                 </a>
 
               <ul class="dropdown-menu">
-                <li><a href="#">Mi cuenta</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Mis Datos</li>
+                <!--<li><a href="#">Mi cuenta</a></li>-->
+                <!--<li class="divider"></li>-->
+                <!--<li class="dropdown-header">Mis Datos</li>-->
                 <li><a href="usuario_perfil.php">Perfil</a></li>
                 <li class="divider"></li>
                 <li><a href="sis_logout.php">Salir</a></li>

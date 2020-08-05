@@ -5,7 +5,7 @@
 <head>    
 	<?php include "sis_header.php" ?>
 </head>
-<body class=" theme-blue">
+<body class="theme-blue">
 	<?php include "sis_script.php" ?>
 	<?php include "sis_menu_usuario.php" ?>   
 	<?php include "sis_menu.php" ?>
