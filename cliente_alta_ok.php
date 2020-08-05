@@ -19,7 +19,7 @@
 
 
 <div class="panel panel-default">
-        <a href="#page-stats" class="panel-heading" data-toggle="collapse">cliente</a>
+        <a href="#page-stats" class="panel-heading" data-toggle="collapse">Solicitud para Nuevo Cliente</a>
         <div id="page-stats" class="panel-collapse panel-body collapse in">    
         <?php  include "inc_cliente/inc_cliente_alta_ok.php" ?>               
         </div>
